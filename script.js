@@ -1,45 +1,65 @@
-let hands = ["Rock", "Paper", "Scissors"]
+const result = document.querySelector("#result")
+const score = document.querySelector("#score")
+const rock = document.querySelector("#rock")
+const paper = document.querySelector("#paper")
+const scissors = document.querySelector("#scissors")
+const ui = [rock, paper, scissors]
+const hands = ["Rock", "Paper", "Scissors"]
+
+let computerScore = 0;
+let humanScore = 0;
+
+ui.forEach(element => element.addEventListener("click", playRound))
+
 
 function computerPlay() {
     let item = hands[Math.floor(Math.random()*hands.length)];
     return item
+};
+
+function updateScore() {
+    if(humanScore === 5) {
+        score.textContent = `Human won ${humanScore} to ${computerScore}`
+    } else if (computerScore === 5) {
+        score.textContent = `Computer won ${computerScore} to ${humanScore}`
+    }
+    score.textContent = `Human: ${humanScore} - ${computerScore} Computer`
 }
 
-function game() {
-    console.log(playRound(prompt(), computerPlay()))
-    console.log(playRound(prompt(), computerPlay()))
-    console.log(playRound(prompt(), computerPlay()))
-    console.log(playRound(prompt(), computerPlay()))
-    console.log(playRound(prompt(), computerPlay()))
+function playRound(e) {
+    const player = e.target.attributes[1].nodeValue
+    const computer = computerPlay()
+    console.log(`${player} ${computer}`)
 
-}
+    if(humanScore === 5 || computerScore === 5) return;
 
-function playRound(playerSelection, computerSelection) {
-    if (playerSelection === "Rock") {
-        if (computerSelection === "Rock") {
-            return `Draw! - ${playerSelection} equals ${computerSelection}`
-        } else if (computerSelection === "Paper") {
-            return `You lost! - ${playerSelection} loses to ${computerSelection}`
+    if(player === computer) {
+        result.textContent = `Both choose ${player} - DRAW!`
+    } else if (player === "Rock") {
+        if (computer === "Paper") {
+            computerScore += 1;
+            result.textContent = `You chose ${player}. The computer chose ${computer}. You lost!`
         } else {
-            return `You won! - ${playerSelection} beats ${computerSelection}`
+            humanScore += 1;
+            result.textContent = `You chose ${player}. The computer chose ${computer}. You won!`
         }
-    } else if (playerSelection === "Paper") {
-        if (computerSelection === "Rock") {
-            return `You won! - ${playerSelection} beats ${computerSelection}`
-        } else if (computerSelection === "Paper") {
-            return `Draw! - ${playerSelection} equals ${computerSelection}`
+    }  else if (player === "Paper") {
+        if (computer === "Rock") {
+            humanScore += 1;
+            result.textContent = `You chose ${player}. The computer chose ${computer}. You won!`
         } else {
-            return `You lost! - ${playerSelection} loses to ${computerSelection}`
+            computerScore += 1;
+            result.textContent = `You chose ${player}. The computer chose ${computer}. You lost!`
         }
-} else {
-        if (computerSelection === "Rock") {
-            return `You lost! - ${playerSelection} loses to ${computerSelection}`
-        } else if (computerSelection === "Paper") {
-            return `You won! - ${playerSelection} beats ${computerSelection}`
+    } else {
+        if (computer === "Paper") {
+            humanScore += 1;
+            result.textContent = `You chose ${player}. The computer chose ${computer}. You won!`
         } else {
-            return `Draw! - ${playerSelection} equals ${computerSelection}`
+            humanScore += 1;
+            result.textContent = `You chose ${player}. The computer chose ${computer}. You lost!`
         }
     }
-}
-
-game()
+    console.log(`H: ${humanScore} C: ${computerScore}`)
+    updateScore()
+};
